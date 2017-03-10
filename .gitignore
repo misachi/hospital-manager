@@ -5,6 +5,12 @@ __pycache__/
 #pycharm ide files
 .idea/
 
+# project files and directories
+/PatientManager/local_settings.py
+/PatientManager/static/
+/PatientManger/tmp/
+/PatientManager/media/
+
 #log file
 logs
 
