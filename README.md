@@ -1,0 +1,1 @@
+Patient Manager is a simple app that let's doctors or medical practitioners easily manage patients. Both inpatients and outpatients.
