@@ -1,0 +1,85 @@
+{% extends 'patientmgt/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Insurance Details{% endblock %}
+
+{% block nav_brand %}
+
+<a href="#" class="navbar-brand">
+    <img class="brand" src="{% static 'img/finance101.png' %}">
+</a>
+
+{% endblock %}
+
+
+ {% block nav %}
+	<div class="row navbar-right col-sm-4">
+		<ul class="navbar-nav nav">
+			<li><a href="#">Home</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Details <span class="caret"></span> </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'patientmgt_parent' %}">Parent</a></li>
+                    <li><a href="{% url 'patientmgt_child' %}">Child</a></li>
+                </ul>
+            </li>
+            <li class="active"><a href="{% url 'patientmgt_insurance' %}">Insurance</a></li>
+            <li><a href="#">Diagnosis</a></li>
+			<li><a href="{% url 'logout' %}">Logout</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+{% block body %}
+
+<div class="container auto_animate">
+	<div class="maximum-width col-md-offset-2 margin-top-120 col-md-8">
+		<div class="page-header" id="gallery">
+			<h2> Insurance Details.<small>Put details here.</small></h2>
+		</div>
+		<form class="form-horizontal" method="POST" action="" role="form" id="insurance-form">
+			{% csrf_token %}
+            <div class="form-group ">
+                <label for="insurance-id" class="control-label col-md-2">Insurance ID</label>
+                <div class="col-md-10">
+                    <input class="form-control" name="insurance" placeholder="Insurance number" type="text" id="insurance-id">
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label for="insurance-name" class="control-label col-md-2">Insurance Name</label>
+                <div class="col-md-10">
+                    <input class="form-control" name="iname" placeholder="Insurance Name" type="text" id="insurance-name">
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label for="p-id" class="control-label col-md-2">Parent ID</label>
+                <div class="col-md-10">
+                    <input class="form-control" name="pid" placeholder="ID number" type="text" id="p-id">
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label for="allergy" class="control-label col-md-2">Allergy</label>
+                <div class="col-md-10">
+                    <textarea class="form-control" name="allergy" placeholder="Allergy details" type="" id="allergy"></textarea>
+                </div>
+            </div>
+
+            <div class="col-md-offset-2">
+                <label for="inpatient">
+                    <input  name="patient" value="inpatient" type="checkbox" id="inpatient">
+                    Inpatient
+                </label>
+                <label for="outpatient" class="col-md-offset-1">
+                    <input  name="patient" value="outpatient"  type="checkbox" id="outpatient">
+                    Outpatient
+                </label>
+            </div>
+		</form>
+    </div>
+</div>
+
+{% endblock %}

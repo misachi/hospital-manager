@@ -50,16 +50,22 @@ class InsuranceDetails(models.Model):
     insurance_name = models.CharField(max_length=30)
     parent = models.ForeignKey(ParentRegistration)
     allergy_details = models.CharField(max_length=500)
-    INPATIENT = "IN"
-    OUTPATIENT = "OUT"
-    visit_type_choices = (
-        (INPATIENT, "Inpatient"),
-        (OUTPATIENT, "Outpatient"),
-    )
-    visit_type = models.CharField(max_length=1,
-                                  choices=visit_type_choices,
-                                  default=INPATIENT,
-                                  )
+    visit_type = models.CharField(max_length=10)
+
+    @staticmethod
+    def store_insurance_data(
+            _id,
+            i_name,
+            pid,
+            allergy,
+            visit):
+        InsuranceDetails.objects.create(
+            member_id=_id,
+            insurance_name=i_name,
+            parent=pid,
+            allergy_details=allergy,
+            visit_type=visit,
+        )
 
 
 @python_2_unicode_compatible
