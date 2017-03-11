@@ -25,7 +25,7 @@
                 </ul>
             </li>
             <li class="active"><a href="{% url 'patientmgt_insurance' %}">Insurance</a></li>
-            <li><a href="#">Diagnosis</a></li>
+            <li><a href="{% url 'patientmgt_diagnosis' %}">Diagnosis</a></li>
 			<li><a href="{% url 'logout' %}">Logout</a></li>
 		</ul>
 	</div>
@@ -78,6 +78,9 @@
                     Outpatient
                 </label>
             </div>
+            <div class="col-md-offset-2">
+				<button type="submit" class="btn btn-primary btn-block">Sign up</button>
+			</div>
 		</form>
     </div>
 </div>

@@ -43,6 +43,23 @@ class ChildRegistration(models.Model):
     mobile_number = models.CharField(max_length=20)
     date_of_birth = models.DateField()
 
+    @staticmethod
+    def create_child(_id,
+                      fname,
+                      mname,
+                      lname,
+                      mail_no,
+                      mobile_no,
+                      birthday):
+        ChildRegistration.objects.create(parent_id=_id,
+                                               first_name=fname,
+                                               middle_name=mname,
+                                               last_name=lname,
+                                               email=mail_no,
+                                               mobile_number=mobile_no,
+                                               date_of_birth=birthday)
+
+
 
 @python_2_unicode_compatible
 class InsuranceDetails(models.Model):
@@ -74,4 +91,43 @@ class Diagnosis(models.Model):
     tests = models.CharField(max_length=500)
     specimen = models.CharField(max_length=30)
     lab_test = models.CharField(max_length=20)
-    time_to_results = models.DateTimeField()
+    time_to_results = models.DateField()
+
+    @staticmethod
+    def create_diagnosis(
+            _id,
+            test,
+            specimen,
+            lab,
+            time):
+        Diagnosis.objects.create(
+            diagnosis_id=_id,
+            tests=test,
+            specimen=specimen,
+            lab_test=lab,
+            time_to_results=time
+        )
+
+
+@python_2_unicode_compatible
+class SearchDisplay(models.Model):
+    parent = models.ForeignKey(ParentRegistration)
+    child = models.ForeignKey(ChildRegistration)
+    diagnosis = models.ForeignKey(Diagnosis)
+    insurance = models.ForeignKey(InsuranceDetails)
+
+    # method extracts parent using the parent ID number
+    @staticmethod
+    def get_parent_if_child(_id):
+        parents_ = SearchDisplay.objects.filter(parentregistration__parent_id=_id)
+        return parents_
+
+    @staticmethod
+    def get_insurance_details(_id):
+        insurance = SearchDisplay.objects.filter(insurancedetails__parentregistration__parent_id=_id)
+        return insurance
+
+    @staticmethod
+    def get_diagnosis(_id):
+        diagnosis_ = SearchDisplay.objects.filter(diagnosis__parentregistration__parent_id=_id)
+        return diagnosis_

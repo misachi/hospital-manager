@@ -25,8 +25,8 @@ from patientmgt.forms import LoginForm
 urlpatterns = [
     url(r"^patient/", include("patientmgt.urls")),
     url(r"^$",
-        TemplateView.as_view(template_name="patientmgt/parent_details.html"),
-        name="parent_details"
+        TemplateView.as_view(template_name="patientmgt/display.html"),
+        name="display"
     ),
     url(r"^login/$", auth_views.login, {
         "template_name": "patientmgt/login.html",

@@ -2,7 +2,7 @@
 
 {% load staticfiles %}
 
-{% block title %}Parent Details{% endblock %}
+{% block title %}Child Details{% endblock %}
 
 {% block nav_brand %}
 
@@ -16,7 +16,7 @@
  {% block nav %}
 	<div class="row navbar-right col-sm-4">
 		<ul class="navbar-nav nav">
-			<li><a href="#">Home</a></li>
+			<li><a href="{% url 'patientmgt_search' %}">Home</a></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Details <span class="caret"></span> </a>
                 <ul class="dropdown-menu" role="menu">
@@ -24,8 +24,8 @@
                     <li class="active"><a href="{% url 'patientmgt_child' %}">Child</a></li>
                 </ul>
             </li>
-            <li><a href="#">Insurance</a></li>
-            <li><a href="#">Diagnosis</a></li>
+            <li><a href="{% url 'patientmgt_insurance' %}">Insurance</a></li>
+            <li><a href="{% url 'patientmgt_diagnosis' %}">Diagnosis</a></li>
 			<li><a href="{% url 'logout' %}">Logout</a></li>
 		</ul>
 	</div>
@@ -36,7 +36,7 @@
 <div class="container auto_animate">
 	<div class="maximum-width col-md-offset-2 margin-top-120 col-md-8">
 		<div class="page-header" id="gallery">
-			<h2> Details.<small>Put details here.</small></h2>
+			<h2> Details.<small>Put Child's details here.</small></h2>
 		</div>
 		<form class="form-horizontal" method="POST" action="" role="form" id="child-form">
 			{% csrf_token %}
@@ -52,39 +52,36 @@
                     <input class="form-control" name="lname" placeholder="Last name" type="text">
                 </div>
             </div>
-			<div class="col-md-offset-2">
-				<button type="submit" class="btn btn-primary btn-block">Sign up</button>
-			</div>
 
             <div class="form-group ">
                 <label for="mail-no" class="control-label col-md-3">Email address</label>
-                <div class="col-md-3">
+                <div class="col-md-9">
                     <input class="form-control" name="mail_no" placeholder="Email Address" type="email" id="mail-no">
                 </div>
             </div>
 
             <div class="form-group ">
                 <label for="p-id" class="control-label col-md-3">ID(Parent)</label>
-                <div class="col-md-3">
-                    <input class="form-control" name="mail_no" placeholder="ID number" type="text" id="p-id">
+                <div class="col-md-9">
+                    <input class="form-control" name="pid" placeholder="ID number" type="text" id="p-id">
                 </div>
             </div>
 
             <div class="form-group ">
                 <label for="mobile-no" class="control-label col-md-3">Mobile</label>
-                <div class="col-md-3">
+                <div class="col-md-9">
                     <input class="form-control" name="mobile" placeholder="Mobile number" type="tel" id="mobile-no">
                 </div>
             </div>
 
             <div class="form-group ">
                 <label for="b-day" class="control-label col-md-3">Email address</label>
-                <div class="col-md-3">
+                <div class="col-md-9">
                     <input class="form-control" name="bday" placeholder="Birthday" type="date" id="b-day">
                 </div>
             </div>
 
-            <div class="col-md-offset-2">
+            <div class="col-md-offset-9">
 				<button type="submit" class="btn btn-primary btn-block">Sign up</button>
 			</div>
 		</form>

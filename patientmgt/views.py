@@ -9,6 +9,7 @@ from patientmgt.models import (
     ChildRegistration,
     InsuranceDetails,
     Diagnosis,
+    SearchDisplay
 )
 
 
@@ -16,7 +17,7 @@ from patientmgt.models import (
 def parent_details(request):
     if request.method == 'POST':
         _id = request.POST.get('_id')
-        fname = request.POST('fname')
+        fname = request.POST.get('fname')
         mname = request.POST.get('mname')
         lname = request.POST.get('lname')
         mail_no = request.POST.get('mail_no')
@@ -31,6 +32,8 @@ def parent_details(request):
             mail_no,
             mobile_no,
             birthday)
+        return HttpResponseRedirect('patient/insurance')
+
     return render(request, "patientmgt/parent_detail.html", {})
 
 
@@ -45,7 +48,7 @@ def child_details(request):
         mobile_no = request.POST.get('mobile')
         birthday = request.POST.get('bday')
 
-        ChildRegistration.create_parent(
+        ChildRegistration.create_child(
             parent,
             fname,
             mname,
@@ -53,6 +56,7 @@ def child_details(request):
             mail_no,
             mobile_no,
             birthday)
+        return HttpResponseRedirect('/patient/insurance')
     return render(request, "patientmgt/child_detail.html", {})
 
 
@@ -73,18 +77,43 @@ def insurance_details(request):
                 allergy_,
                 visit_type
             )
+            return HttpResponseRedirect('patient/diagnosis')
 
     return render(request, "patientmgt/insurance.html", {})
 
 
 @login_required(login_url='login')
 def diagnosis(request):
-    pass
+    if request.method == 'POST':
+        tests = request.POST.get('test')
+        specimen = request.POST.get('specimen')
+        lab_test = request.POST.get('lab')
+        time = request.POST.get('time')
+
+        Diagnosis.create_diagnosis(
+            tests,
+            specimen,
+            lab_test,
+            time
+        )
+    return render(request, 'patientmgt/diagnosis.html', {})
 
 
 @login_required(login_url='login')
-def search_person(request):
-    pass
+def search(request):
+    age = request.POST.get('age')
+    _id = request.POST.get('id_no')
+    result = []
+    if age < 18:
+        child = SearchDisplay.get_parent_if_child(_id)
+        result.append(child)
+    insurance = SearchDisplay.get_insurance_details(_id)
+    diagnosis = SearchDisplay.get_diagnosis(_id)
+    return render(request, 'patientmgt/display.html', {
+        'insurance': insurance,
+        'diagnosis': diagnosis,
+        'result': result
+    })
 
 
 def doctor_register(request):
@@ -103,7 +132,7 @@ def doctor_register(request):
             user = authenticate(username=username, password=password)
             login(request, user)
 
-            return redirect('/pa/')
+            return HttpResponseRedirect('patient/parent')
         else:
             return render(request, 'patientmgt/register.html', {'form': user_form})
     else:

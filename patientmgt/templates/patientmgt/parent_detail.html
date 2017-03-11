@@ -21,11 +21,11 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Details <span class="caret"></span> </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="active"><a href="{% url 'patientmgt_parent' %}">Parent</a></li>
-                    <li><a href="{% url 'patientmgt_parent' %}">Child</a></li>
+                    <li><a href="{% url 'patientmgt_child' %}">Child</a></li>
                 </ul>
             </li>
-			<li><a href="#">Insurance</a></li>
-            <li><a href="#">Diagnosis</a></li>
+			<li><a href="{% url 'patientmgt_insurance' %}">Insurance</a></li>
+            <li><a href="{% url 'patientmgt_diagnosis' %}">Diagnosis</a></li>
 			<li><a href="{% url 'logout' %}">Logout</a></li>
 		</ul>
 	</div>
@@ -38,7 +38,7 @@
 		<div class="page-header" id="gallery">
 			<h2> Register.<small>Sign up here.</small></h2>
 		</div>
-		<form class="form-horizontal" method="POST" action="" role="form" id="parent-form">
+		<form class="form-horizontal" method="GET" action="" role="form" id="parent-form">
 			{% csrf_token %}
             <div class="form-group ">
                 <label for="f-name" class="control-label col-md-3">Name</label>
@@ -55,33 +55,33 @@
 
             <div class="form-group ">
                 <label for="mail-no" class="control-label col-md-3">Email address</label>
-                <div class="col-md-3">
+                <div class="col-md-9">
                     <input class="form-control" name="mail_no" placeholder="Email Address" type="email" id="mail-no">
                 </div>
             </div>
 
             <div class="form-group ">
                 <label for="p-id" class="control-label col-md-3">ID</label>
-                <div class="col-md-3">
+                <div class="col-md-9">
                     <input class="form-control" name="_id" placeholder="ID number" type="text" id="p-id">
                 </div>
             </div>
 
             <div class="form-group ">
                 <label for="mobile-no" class="control-label col-md-3">Mobile</label>
-                <div class="col-md-3">
+                <div class="col-md-9">
                     <input class="form-control" name="mobile" placeholder="Mobile number" type="tel" id="mobile-no">
                 </div>
             </div>
 
             <div class="form-group ">
                 <label for="b-day" class="control-label col-md-3">Date of Birth</label>
-                <div class="col-md-3">
+                <div class="col-md-9">
                     <input class="form-control" name="bday" placeholder="Birthday" type="date" id="b-day">
                 </div>
             </div>
 
-            <div class="col-md-offset-3">
+            <div class="col-md-offset-9">
 				<button type="submit" class="btn btn-primary btn-block">Sign up</button>
 			</div>
 		</form>
