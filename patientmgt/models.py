@@ -14,6 +14,9 @@ class ParentRegistration(models.Model):
     mobile_number = models.CharField(max_length=20)
     date_of_birth = models.DateField()
 
+    def __str__(self):
+        return self.first_name + '\t' + self.middle_name + '\t' + self.last_name
+
     @staticmethod
     def create_parent(_id,
                       fname,
@@ -73,7 +76,7 @@ class ChildRegistration(models.Model):
         _id = ChildRegistration.objects.filter(name=name).values('parent')
 
         # Using the returned parent id to get parent details
-        parents_ = ChildRegistration.objects.filter(parentregistration__parent_id=_id)
+        parents_ = ChildRegistration.objects.filter(parent__parent_id=_id)
         return parents_
 
 
@@ -85,6 +88,9 @@ class InsuranceDetails(models.Model):
     allergy_details = models.CharField(max_length=500)
     visit_type = models.CharField(max_length=10)
 
+    def __str__(self):
+        return self.insurance_name + '\t' + str(self.parent.first_name)
+
     @staticmethod
     def store_insurance_data(
             _id,
@@ -92,17 +98,18 @@ class InsuranceDetails(models.Model):
             pid,
             allergy,
             visit):
+        pid_ = ParentRegistration.objects.get(parent_id=pid)
         InsuranceDetails.objects.create(
             member_id=_id,
             insurance_name=i_name,
-            parent=pid,
+            parent=pid_,
             allergy_details=allergy,
             visit_type=visit,
         )
 
     @staticmethod
     def get_insurance_details(_id):
-        insurance = InsuranceDetails.objects.filter(parentregistration__parent_id=_id)
+        insurance = InsuranceDetails.objects.filter(parent__parent_id=_id)
         return insurance
 
 
@@ -133,7 +140,7 @@ class ParentDiagnosis(models.Model):
 
     @staticmethod
     def get_parent_diagnosis(_id):
-        diagnosis_ = ParentDiagnosis.objects.filter(parentregistration__parent_id=_id)
+        diagnosis_ = ParentDiagnosis.objects.filter(parent__parent_id=_id)
         return diagnosis_
 
 
@@ -164,5 +171,5 @@ class ChildDiagnosis(models.Model):
     @staticmethod
     def get_diagnosis(name):
         child_ = ChildRegistration.objects.filter(name=name).values('child_id')
-        diagnosis_ = ChildDiagnosis.objects.filter(childregistration__child_id=child_)
+        diagnosis_ = ChildDiagnosis.objects.filter(child__child_id=child_)
         return diagnosis_

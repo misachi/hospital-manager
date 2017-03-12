@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -11,7 +11,6 @@ from patientmgt.models import (
     InsuranceDetails,
     ParentDiagnosis,
     ChildDiagnosis,
-    SearchDisplay
 )
 
 
@@ -106,24 +105,27 @@ def parent_diagnosis(request):
 
 @login_required(login_url='login')
 def search(request):
-    # age = request.POST.get('age')
+    user = request.user
     srch_term = request.POST.get('srch-term')
-    result_parent = []
-    result_child = []
-    if type(srch_term) == str:
-        f_name, m_name, l_name = srch_term.split()
-        child_parent = SearchDisplay.get_parent_if_child(f_name, m_name, l_name)
-        child_ = ChildRegistration.get_child_details(f_name, m_name, l_name)
-        result_child.append(child_)
-        result_parent.append(child_parent)
+    result_parent, result_child, result_child_diagnosis = [], [], []
 
-    insurance = SearchDisplay.get_insurance_details(srch_term)
-    parent_diagnosis_ = SearchDisplay.get_diagnosis(srch_term)
+    if type(srch_term) == str:
+        child_parent = ChildRegistration.get_parent_if_child(srch_term)
+        details_for_child = ChildRegistration.get_child_details(srch_term)
+        diagnosis_for_child = ChildDiagnosis.get_diagnosis(srch_term)
+        result_child.append(details_for_child)
+        result_parent.append(child_parent)
+        result_child_diagnosis.append(diagnosis_for_child)
+
+    parent_diagnosis_ = ParentDiagnosis.get_parent_diagnosis(srch_term)
+    insurance = InsuranceDetails.get_insurance_details(srch_term)
     return render(request, 'patientmgt/display.html', {
+        'user': user,
         'insurance': insurance,
         'parent_diagnosis': parent_diagnosis_,
-        'child': result_child,
-        'child_parent': result_parent
+        'child_diagnosis': result_child_diagnosis,
+        'child_reg_details': result_child,
+        'child_parent_insurance': result_parent
     })
 
 
