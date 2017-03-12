@@ -175,5 +175,5 @@ class SearchDisplay(models.Model):
 
     @staticmethod
     def get_diagnosis(_id):
-        diagnosis_ = SearchDisplay.objects.filter(diagnosis__parentregistration__parent_id=_id)
+        diagnosis_ = SearchDisplay.objects.filter(parentdiagnosis__parentregistration__parent_id=_id)
         return diagnosis_

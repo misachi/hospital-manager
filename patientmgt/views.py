@@ -8,7 +8,8 @@ from patientmgt.models import (
     ParentRegistration,
     ChildRegistration,
     InsuranceDetails,
-    Diagnosis,
+    ParentDiagnosis,
+    ChildDiagnosis,
     SearchDisplay
 )
 
@@ -83,14 +84,14 @@ def insurance_details(request):
 
 
 @login_required(login_url='login')
-def diagnosis(request):
+def parent_diagnosis(request):
     if request.method == 'POST':
         tests = request.POST.get('test')
         specimen = request.POST.get('specimen')
         lab_test = request.POST.get('lab')
         time = request.POST.get('time')
 
-        Diagnosis.create_diagnosis(
+        ParentDiagnosis.create_diagnosis(
             tests,
             specimen,
             lab_test,
