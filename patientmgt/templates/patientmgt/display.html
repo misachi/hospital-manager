@@ -36,7 +36,7 @@
 <div class="container auto_animate">
 	<div class="maximum-width col-md-offset-2 margin-top-120 col-md-6">
 		<div class="page-header" id="gallery">
-			<h2> Enter ID to search.<small>Enter ID and age to get details.</small></h2>
+			<h2> Search .<small>Enter ID or Child name to get details.</small></h2>
 		</div>
         <!-- end page-header -->
 		<form class="form-horizontal" method="POST" action="" role="form" id="parent-form">
@@ -49,6 +49,35 @@
             </div>
         </form>
         <!-- end form -->
+
+        {% if parent_reg_details and user.is_authenticated %}
+        <div class="padding-top-10">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Mid Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Birthday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ parent_reg_details.parent_id }}</td>
+                        <td>{{ parent_reg_details.first_name }}</td>
+                        <td>{{ parent_reg.middle_name }}</td>
+                        <td>{{ parent_reg.last_name }}</td>
+                        <td>{{ parent_reg.email }}</td>
+                        <td>{{ parent_reg.mobile_no }}</td>
+                        <td>{{ parent_reg.date_of_birth }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
     </div>
 </div>
 

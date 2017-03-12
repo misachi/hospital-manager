@@ -35,7 +35,7 @@ class ParentRegistration(models.Model):
 
     @staticmethod
     def get_parent_details(_id):
-        parent_ = ParentRegistration.objects.get(parent_id=_id)
+        parent_ = ParentRegistration.objects.filter(parent_id=_id)
         return parent_
 
 
