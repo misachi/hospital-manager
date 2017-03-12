@@ -32,7 +32,7 @@ def parent_details(request):
             mail_no,
             mobile_no,
             birthday)
-        return HttpResponseRedirect('patient/insurance')
+        return HttpResponseRedirect('/patient/insurance')
 
     return render(request, "patientmgt/parent_detail.html", {})
 
@@ -101,18 +101,24 @@ def diagnosis(request):
 
 @login_required(login_url='login')
 def search(request):
-    age = request.POST.get('age')
-    _id = request.POST.get('id_no')
-    result = []
-    if age < 18:
-        child = SearchDisplay.get_parent_if_child(_id)
-        result.append(child)
-    insurance = SearchDisplay.get_insurance_details(_id)
-    diagnosis = SearchDisplay.get_diagnosis(_id)
+    # age = request.POST.get('age')
+    srch_term = request.POST.get('srch-term')
+    result_parent = []
+    result_child = []
+    if type(srch_term) == str:
+        f_name, m_name, l_name = srch_term.split()
+        child_parent = SearchDisplay.get_parent_if_child(f_name, m_name, l_name)
+        child_ = ChildRegistration.get_child_details(f_name, m_name, l_name)
+        result_child.append(child_)
+        result_parent.append(child_parent)
+
+    parent_diagnosis_ = SearchDisplay.get_diagnosis(srch_term)
+    insurance = SearchDisplay.get_insurance_details(srch_term)
     return render(request, 'patientmgt/display.html', {
         'insurance': insurance,
-        'diagnosis': diagnosis,
-        'result': result
+        'parent_diagnosis': parent_diagnosis_,
+        'child': result_child,
+        'child_parent': result_parent
     })
 
 

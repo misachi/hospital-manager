@@ -1,13 +1,12 @@
 from __future__ import unicode_literals
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
 
 
 # Patients' Details
 @python_2_unicode_compatible
 class ParentRegistration(models.Model):
-    parent_id = models.CharField(primary_key=True, max_length=8)
+    parent_id = models.IntegerField(primary_key=True)
     first_name = models.CharField(max_length=30)
     middle_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -24,12 +23,12 @@ class ParentRegistration(models.Model):
                       mobile_no,
                       birthday):
         ParentRegistration.objects.create(parent_id=_id,
-                                               first_name=fname,
-                                               middle_name=mname,
-                                               last_name=lname,
-                                               email=mail_no,
-                                               mobile_number=mobile_no,
-                                               date_of_birth=birthday)
+                                          first_name=fname,
+                                          middle_name=mname,
+                                          last_name=lname,
+                                          email=mail_no,
+                                          mobile_number=mobile_no,
+                                          date_of_birth=birthday)
 
 
 @python_2_unicode_compatible
@@ -45,20 +44,30 @@ class ChildRegistration(models.Model):
 
     @staticmethod
     def create_child(_id,
-                      fname,
-                      mname,
-                      lname,
-                      mail_no,
-                      mobile_no,
-                      birthday):
+                     fname,
+                     mname,
+                     lname,
+                     mail_no,
+                     mobile_no,
+                     birthday):
         ChildRegistration.objects.create(parent_id=_id,
-                                               first_name=fname,
-                                               middle_name=mname,
-                                               last_name=lname,
-                                               email=mail_no,
-                                               mobile_number=mobile_no,
-                                               date_of_birth=birthday)
+                                         first_name=fname,
+                                         middle_name=mname,
+                                         last_name=lname,
+                                         email=mail_no,
+                                         mobile_number=mobile_no,
+                                         date_of_birth=birthday)
 
+    @staticmethod
+    def get_child_details(f_name, m_name, l_name):
+        child_ = ChildRegistration.objects.filter(
+            first_name=f_name
+        ).filter(
+            middle_name=m_name
+        ).filter(
+            last_name=l_name
+        )
+        return child_
 
 
 @python_2_unicode_compatible
@@ -86,8 +95,9 @@ class InsuranceDetails(models.Model):
 
 
 @python_2_unicode_compatible
-class Diagnosis(models.Model):
+class ParentDiagnosis(models.Model):
     diagnosis_id = models.AutoField(primary_key=True)
+    parent = models.ForeignKey(ParentRegistration)
     tests = models.CharField(max_length=500)
     specimen = models.CharField(max_length=30)
     lab_test = models.CharField(max_length=20)
@@ -95,13 +105,38 @@ class Diagnosis(models.Model):
 
     @staticmethod
     def create_diagnosis(
-            _id,
+            parent,
             test,
             specimen,
             lab,
             time):
-        Diagnosis.objects.create(
-            diagnosis_id=_id,
+        ParentDiagnosis.objects.create(
+            parent=parent,
+            tests=test,
+            specimen=specimen,
+            lab_test=lab,
+            time_to_results=time
+        )
+
+
+@python_2_unicode_compatible
+class ChildDiagnosis(models.Model):
+    diagnosis_id = models.AutoField(primary_key=True)
+    child = models.ForeignKey(ChildRegistration)
+    tests = models.CharField(max_length=500)
+    specimen = models.CharField(max_length=30)
+    lab_test = models.CharField(max_length=20)
+    time_to_results = models.DateField()
+
+    @staticmethod
+    def create_diagnosis(
+            child,
+            test,
+            specimen,
+            lab,
+            time):
+        ChildDiagnosis.objects.create(
+            child=child,
             tests=test,
             specimen=specimen,
             lab_test=lab,
@@ -113,12 +148,23 @@ class Diagnosis(models.Model):
 class SearchDisplay(models.Model):
     parent = models.ForeignKey(ParentRegistration)
     child = models.ForeignKey(ChildRegistration)
-    diagnosis = models.ForeignKey(Diagnosis)
+    parent_diagnosis = models.ForeignKey(ParentDiagnosis)
+    child_diagnosis = models.ForeignKey(ChildDiagnosis)
     insurance = models.ForeignKey(InsuranceDetails)
 
     # method extracts parent using the parent ID number
     @staticmethod
-    def get_parent_if_child(_id):
+    def get_parent_if_child(f_name, m_name, l_name):
+        # get parent id by spanning relationships
+        _id = ChildRegistration.objects.filter(
+            first_name=f_name
+        ).filter(
+            middle_name=m_name
+        ).filter(
+            last_name=l_name
+        ).values('parent')
+
+        # Using the returned parent id to get parent details
         parents_ = SearchDisplay.objects.filter(parentregistration__parent_id=_id)
         return parents_
 
