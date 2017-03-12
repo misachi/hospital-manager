@@ -1,2 +1,1 @@
 Patient Manager is a simple app that let's doctors or medical practitioners easily manage patients. Both inpatients and outpatients.
-User can store and retrieve patient information with speed thus easing management of patient data in hospitals and health centers.
