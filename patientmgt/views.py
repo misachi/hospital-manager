@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.utils.dateparse import parse_date
 from patientmgt.forms import RegistrationForm
 from patientmgt.models import (
     ParentRegistration,
@@ -86,16 +87,19 @@ def insurance_details(request):
 @login_required(login_url='login')
 def parent_diagnosis(request):
     if request.method == 'POST':
+        parent = request.POST.get('parent')
         tests = request.POST.get('test')
         specimen = request.POST.get('specimen')
         lab_test = request.POST.get('lab')
-        time = request.POST.get('time')
+        get_time = request.POST.get('time')
+        set_time = parse_date(get_time)
 
         ParentDiagnosis.create_diagnosis(
+            parent,
             tests,
             specimen,
             lab_test,
-            time
+            set_time,
         )
     return render(request, 'patientmgt/diagnosis.html', {})
 
@@ -113,8 +117,8 @@ def search(request):
         result_child.append(child_)
         result_parent.append(child_parent)
 
-    parent_diagnosis_ = SearchDisplay.get_diagnosis(srch_term)
     insurance = SearchDisplay.get_insurance_details(srch_term)
+    parent_diagnosis_ = SearchDisplay.get_diagnosis(srch_term)
     return render(request, 'patientmgt/display.html', {
         'insurance': insurance,
         'parent_diagnosis': parent_diagnosis_,

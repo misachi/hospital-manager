@@ -8,7 +8,7 @@ from django.utils.encoding import python_2_unicode_compatible
 class ParentRegistration(models.Model):
     parent_id = models.IntegerField(primary_key=True)
     first_name = models.CharField(max_length=30)
-    middle_name = models.CharField(max_length=30)
+    middle_name = models.CharField(max_length=30, null=True)
     last_name = models.CharField(max_length=30)
     email = models.EmailField()
     mobile_number = models.CharField(max_length=20)
@@ -30,14 +30,17 @@ class ParentRegistration(models.Model):
                                           mobile_number=mobile_no,
                                           date_of_birth=birthday)
 
+    @staticmethod
+    def get_parent_details(_id):
+        parent_ = ParentRegistration.objects.get(parent_id=_id)
+        return parent_
+
 
 @python_2_unicode_compatible
 class ChildRegistration(models.Model):
     child_id = models.AutoField(primary_key=True)
     parent = models.ForeignKey(ParentRegistration)
-    first_name = models.CharField(max_length=30)
-    middle_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
     email = models.EmailField()
     mobile_number = models.CharField(max_length=20)
     date_of_birth = models.DateField()
@@ -59,15 +62,19 @@ class ChildRegistration(models.Model):
                                          date_of_birth=birthday)
 
     @staticmethod
-    def get_child_details(f_name, m_name, l_name):
-        child_ = ChildRegistration.objects.filter(
-            first_name=f_name
-        ).filter(
-            middle_name=m_name
-        ).filter(
-            last_name=l_name
-        )
+    def get_child_details(name):
+        child_ = ChildRegistration.objects.filter(name=name)
         return child_
+
+    # method extracts parent using the parent ID number
+    @staticmethod
+    def get_parent_if_child(name):
+        # get parent id by spanning child registration model
+        _id = ChildRegistration.objects.filter(name=name).values('parent')
+
+        # Using the returned parent id to get parent details
+        parents_ = ChildRegistration.objects.filter(parentregistration__parent_id=_id)
+        return parents_
 
 
 @python_2_unicode_compatible
@@ -93,6 +100,11 @@ class InsuranceDetails(models.Model):
             visit_type=visit,
         )
 
+    @staticmethod
+    def get_insurance_details(_id):
+        insurance = InsuranceDetails.objects.filter(parentregistration__parent_id=_id)
+        return insurance
+
 
 @python_2_unicode_compatible
 class ParentDiagnosis(models.Model):
@@ -110,13 +122,19 @@ class ParentDiagnosis(models.Model):
             specimen,
             lab,
             time):
+        parent_obj = ParentRegistration.objects.get(parent_id=parent)
         ParentDiagnosis.objects.create(
-            parent=parent,
+            parent=parent_obj,
             tests=test,
             specimen=specimen,
             lab_test=lab,
             time_to_results=time
         )
+
+    @staticmethod
+    def get_parent_diagnosis(_id):
+        diagnosis_ = ParentDiagnosis.objects.filter(parentregistration__parent_id=_id)
+        return diagnosis_
 
 
 @python_2_unicode_compatible
@@ -143,37 +161,8 @@ class ChildDiagnosis(models.Model):
             time_to_results=time
         )
 
-
-@python_2_unicode_compatible
-class SearchDisplay(models.Model):
-    parent = models.ForeignKey(ParentRegistration)
-    child = models.ForeignKey(ChildRegistration)
-    parent_diagnosis = models.ForeignKey(ParentDiagnosis)
-    child_diagnosis = models.ForeignKey(ChildDiagnosis)
-    insurance = models.ForeignKey(InsuranceDetails)
-
-    # method extracts parent using the parent ID number
     @staticmethod
-    def get_parent_if_child(f_name, m_name, l_name):
-        # get parent id by spanning relationships
-        _id = ChildRegistration.objects.filter(
-            first_name=f_name
-        ).filter(
-            middle_name=m_name
-        ).filter(
-            last_name=l_name
-        ).values('parent')
-
-        # Using the returned parent id to get parent details
-        parents_ = SearchDisplay.objects.filter(parentregistration__parent_id=_id)
-        return parents_
-
-    @staticmethod
-    def get_insurance_details(_id):
-        insurance = SearchDisplay.objects.filter(insurancedetails__parentregistration__parent_id=_id)
-        return insurance
-
-    @staticmethod
-    def get_diagnosis(_id):
-        diagnosis_ = SearchDisplay.objects.filter(parentdiagnosis__parentregistration__parent_id=_id)
+    def get_diagnosis(name):
+        child_ = ChildRegistration.objects.filter(name=name).values('child_id')
+        diagnosis_ = ChildDiagnosis.objects.filter(childregistration__child_id=child_)
         return diagnosis_
