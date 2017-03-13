@@ -16,7 +16,7 @@
  {% block nav %}
 	<div class="row navbar-right col-sm-4">
 		<ul class="navbar-nav nav">
-			<li><a href="#">Home</a></li>
+			<li><a href="{% url 'patientmgt_p_search' %}">Home</a></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Details <span class="caret"></span> </a>
                 <ul class="dropdown-menu" role="menu">
@@ -25,7 +25,20 @@
                 </ul>
             </li>
 			<li><a href="{% url 'patientmgt_insurance' %}">Insurance</a></li>
-            <li><a href="{% url 'patientmgt_p_diagnosis' %}">Diagnosis</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Diagnosis <span class="caret"></span> </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'patientmgt_p_diagnosis' %}">Parent</a></li>
+                    <li><a href="{% url 'patientmgt_child' %}">Child</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Search Patient<span class="caret"></span> </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'patientmgt_p_search' %}">Parent</a></li>
+                    <li><a href="{% url 'patientmgt_child' %}">Child</a></li>
+                </ul>
+            </li>
 			<li><a href="{% url 'logout' %}">Logout</a></li>
 		</ul>
 	</div>
