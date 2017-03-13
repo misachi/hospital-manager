@@ -104,7 +104,7 @@ def parent_diagnosis(request):
 
 
 @login_required(login_url='login')
-def search(request):
+def search_parent(request):
     user = request.user
     srch_term = request.POST.get('srch-term')
     result_parent, result_child, result_child_diagnosis = [], [], []

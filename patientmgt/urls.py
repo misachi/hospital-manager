@@ -5,7 +5,7 @@ from patientmgt.views import (
     doctor_register,
     insurance_details,
     parent_diagnosis,
-    search,
+    search_parent,
 )
 
 urlpatterns = [
@@ -15,5 +15,5 @@ urlpatterns = [
     url(r'^child/$', child_details, name='patientmgt_child'),
     url(r'^insurance/$', insurance_details, name='patientmgt_insurance'),
     url(r'^diagnosis/$', parent_diagnosis, name='patientmgt_p_diagnosis'),
-    url(r'^search/$', search, name='patientmgt_search')
+    url(r'^search/$', search_parent, name='patientmgt_p_search')
 ]

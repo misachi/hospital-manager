@@ -18,6 +18,9 @@
     transition-delay: 1s;
 
 }
+.padding-top-30 {
+    padding-top: 30px;
+}
 .navbar-brand img{
     /* transition for growing logo */
     -webkit-transition: all .5s ease;
