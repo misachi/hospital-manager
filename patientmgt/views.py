@@ -67,7 +67,7 @@ def insurance_details(request):
         insurance_id = request.POST.get('insurance')
         insurance_name = request.POST.get('iname')
         parent_id = request.POST.get('pid')
-        allergy_  = request.POST.get('allergy')
+        allergy_ = request.POST.get('allergy')
         visit_type = request.POST.get('patient')
 
         if visit_type in ["inpatient", "outpatient"]:
