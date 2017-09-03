@@ -1,2 +1,4 @@
 PatientManager/static/admin/* linguist-vendored
 patientmgt/static/* linguist-vendored
+patientmgt/templates/patientmgt/* linguist-vendored
+templates/admin* linguist-vendored
